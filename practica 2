@@ -1,0 +1,27 @@
+#crear 3 variables con 4 entradas 
+#facultad economia ingeniria, arquitectura,derecho)
+#licenciaturas (actiaria, ing civil, arquitectura, derecho)
+#calificacin(6,4,10,8)
+#verificar que tipo de variable son
+#borrar las variables facultad y licenciatura
+#graficar la variable calificacion
+
+
+
+facultad <- c("economia", "ingenieria", "arquitectura", "derecho")
+licenciatura <- c("actiaria","ing civil","arquitectura","derecho")
+calificacion <- c(6,4,10,8)
+class(facultad)
+class(licenciatura)
+class(calificacion)
+#para borrar se utiliza la funcion rm
+rm(facultad)
+rm(licenciatura)
+
+
+pie (calificacion,main=
+       "Gráfica1 de pie de las calificaciones "
+     ,sub=("Fuente:Facultad de economía")
+     , col= c("blue","red","pink","yellow")
+     , radius = 1.0, clockwise = FALSE,lty = 6
+)
