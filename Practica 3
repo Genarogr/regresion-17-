@@ -1,0 +1,82 @@
+##ejercicio
+## generar 3 secuencias que generen los siguientes datos.
+## 1) 1000 datos que se generen de 3 en 3 y pedir a R el dato 300 del vector generado
+## 2) 450 datos que su secuencia sea de 50 datos en 50 datos, pedir a R el dato 10
+# 3) 2000 datos que su secuencia sea de .3 en .3, en este caso pedir a R los datos 3,15,800,1999
+############ ejercicio datos aleatorios
+# 1) suponemos una empresa que quiere estimar una pension para sus trabjadores con base en la antiguedad
+## por lo que se requiere estimar una muestra de 500 trabajares y que sus rangos de antiguedad sean desde 0 hasta 30 años
+#Pedir a R el algoritmo ddato de esta muestra
+## 2) generar una muestra de 50000 que tnga un rango de hasta 100000
+## 3) generar una muestra de 50 datos que tengan un rango de 10 a 19, pedir a R los datos  34,43 y 49
+
+
+
+####  Ejercicio 1
+datos <- seq(from=1, to =3000,by=3)
+datos
+datos [300]
+datos1 <- seq(from=1, to =22500,by=50)
+datos1
+datos1 [10]
+datos2 <- seq(from=.3, to =600,by=.3)
+datos2
+datos2 [3]
+datos2 [15]
+datos2 [800]
+datos2 [1999]
+length(datos2)
+##### Ejercicio 2 
+ingreso <- sample(0:30,500,replace = TRUE)
+ingreso
+ingreso [500]
+#### con el data.frame se muestra la tabla de mejor manera
+ingresomuestra <- data.frame(sample(0:100000,50000))
+View (ingresomuestra)
+muestra2 <- sample(10:19,50,replace = TRUE)
+muestra2[34];muestra2[43];muestra2[49]
+#####################################################################
+e <- 1:10
+View(e)
+dim(e) <- c(2,5) ## convierte a e en matriz de dos renglones y 5 columnas
+View(e)
+class(e)
+
+dim(e)<- c(5,2) ### matriz de 5 renglones 2 columnas
+View(e)
+
+##para mandar llamar especificamente un dato de la matriz
+e[5,2] ### aqui mando llamar el dato del renglon 5 y columna 2
+e[3,2] ### aqui mando llamar el dato del renglon 3 y columna 2
+e[2,2] ### aqui mando llamar el dato del renglon 2 y columna 2
+
+### si solo queremos conocer los valores de una columna
+e[,2] ## valores de toda la columna 2
+e[,1] ## valores de toda la columna 1
+e[3,] ## valores de todo el renglon 3
+
+#### matriz
+## que datos ,numero de columnas ,numero de renglones , la funcion byrow ordena
+f <-  matrix(110:119,nrow=5,ncol=2,byrow=T)
+f
+g <-  matrix(1:10,nrow=5,ncol=2)
+g
+
+####### tambien se le pueden asignar nombres a renglones y columnas
+rownames(f) <- c("manzana","naranja","piña","melon","mango")
+colnames(f)<- c("mercado1","mercado2")
+View(f)
+
+### para saber los datos de una columna 
+f["manzana","mercado2"]
+
+h <- matrix(2:21,4,5)
+
+
+### otra forma de generar matrices en r
+i<- rbind(1:2,4:3,c(5,6),c(2,7),c(8,9)) ## cada argumento define un renglon
+i
+j<- cbind(5:3,c(4,5,6),9:7,c(1,5,7),3:5) ## cada argumento define columnas
+j
+
+
