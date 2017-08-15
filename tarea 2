@@ -1,0 +1,6 @@
+
+
+### como volver una numerica a tipo caracter tarea cambiar la entidad a factor numerico
+#### tareaaa
+mti2015$ent=as.numeric(mti2015$ENT)
+class(mti2015$ent)
