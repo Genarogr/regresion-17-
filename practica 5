@@ -1,0 +1,36 @@
+## practica 5
+require(foreign)
+mti2015<- read.dbf("C://Users/genar/Desktop//mti2015_05_17_sdem_precodificado.DBF")
+table(mti2015$SEX)
+View(mti2015)
+install.packages("questionr")
+require(questionr)
+wtd.table(mti2015$SEX,weights = mti2015$FAC_MTI) ### numeros expandibles 
+## cada muestra cada observacion que representa == numeros expandibles
+ls(mti2015)
+sum(mti2015$FAC_MTI)
+### nos da el resultado del total de niños y niñas suma toda la columna
+table(mti2015$R_DEF_MTI)
+table(mti2015$CS_P12)
+
+
+wtd.table(mti2015$CS_P12, weights = mti2015$FAC_MTI)
+### cruce de 2 variables no te deja mas de 2 variables el cruce
+
+wtd.table(mti2015$EDA,mti2015$CS_P12, weights = mti2015$FAC_MTI)
+## de los 4 millones que no saben leer encontramos que 
+### 282718 tienen 5 años
+### hacer que solo te de los niños del estado de mexico
+edomexmuj <- subset(mti2015, mti2015$ENT==15 & mti2015$SEX==2)
+View(edomex)
+###personas de aguascalientes y sacatecas
+personas <- subset(mti2015,mti2015$ENT=="01" | mti2015$ENT==32)
+
+table(personas$ENT)
+View(personas)
+
+
+### como volver una numerica a tipo caracter tarea cambiar la entidad a factor numerico
+#### tareaaa
+mti2015$ent=as.numeric(mti2015$ENT)
+class(mti2015$ent)
