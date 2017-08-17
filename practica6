@@ -1,0 +1,37 @@
+### sesion 6
+
+temporal <- tempfile()
+download.file("http://www.beta.inegi.org.mx/contenidos/proyectos/enchogares/modulos/mti/2015/microdatos/mti2015_bases_conapo_dbf.zip",temporal)
+files = unzip(temporal,list = TRUE)$NAME
+unzip(temporal,files = files[grep("dbf",files)])
+
+library(foreign)
+files
+mti15<- data.frame(read.dbf("mti2015_05_17_sdem_precodificado.DBF"))
+class(mti15$ENT)
+### cambiar a numerico
+mti15$ENT <- as.numeric(as.character(mti15$ENT))
+
+#### etiquetar 
+table(mti15$CS_P15)
+mti15$CS_P15 <- factor(mti15$CS_P15,levels = c(1,2,3,4),labels = c("primaria","secundaria","preparatoria","no sabe"))
+
+
+### etiquetar la variable rama
+mti15$RAMA<- factor(mti15$RAMA,levels = c(1,2,3,4,5,6,7),labels = c("agropecuario","construccion","industria manufacturera","comercio","servicio","otros","no especificado"))
+table(mti15$RAMA)
+
+
+### recodificar el nombre de la variable
+mti15$RAMA <- as.numeric(mti15$RAMA)
+
+mti15$RAMA1[(mti15$RAMA==1)] <-1
+mti15$RAMA1[(mti15$RAMA==2)] <-2
+mti15$RAMA1[(mti15$RAMA==3)] <-2
+mti15$RAMA1[(mti15$RAMA==4)] <-3
+mti15$RAMA1[(mti15$RAMA==5)] <-3
+mti15$RAMA1[(mti15$RAMA==6)] <-4
+mti15$RAMA1[(mti15$RAMA==7)] <-4
+
+mti15$RAMA1<- factor(mti15$RAMA1,levels = c(1,2,3,4),labels = c("PRIMARIO","SECUNDARIO","TERCIARIO","NO ESPECIFICADO"))
+table(mti15$RAMA1)
