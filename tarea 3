@@ -1,0 +1,10 @@
+
+### tarea: graficar con barras la variable EDAD y exportarla a una PDF y mandarla 
+datos <- prop.table(table(mti15$EDAD1))*100
+datos
+bpdatos = barplot(datos,las =2, main = "EDAD",col = rainbow(4))
+text(bpdatos,c(1,1),round(datos,2))
+
+#tarea q con write.csv se puede abrir varias tablas en un solo archivo 
+data <- mti15
+write.csv(data,file="mti15.csv")
