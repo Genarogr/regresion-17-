@@ -1,0 +1,61 @@
+#etiquetar cuando le pongo nombre a las categorias y recodificar es reagrupar 
+#la recodificada crea una nueva variable de los datos q tengo por ejemplo la nueva variable tiene de los datos 1 de las dos 
+# Mti $ rama2 [mti $ roma == 18 & mti $ rama == 2] <- # me dice q tengo q agrupar en rama 1 y los que esten en rama 2 me los divida en dos ramas 
+
+#practica 7 
+
+Temporal <- tempfile ()
+Download.file ("http://www.beta.inegi.org.mx/contenidos/proyectos/enchogares/modulos/mti/2015/microdatos/mti2015_bases_conapo_dbf.zip", temporal)
+Files = unzip (temporal, list = TRUE) $ NAME
+Unzip (temporal, archivos = archivos [grep ("dbf", archivos)])
+Archivos
+Biblioteca (extranjero)
+Mti <-data.frame (read.dbf ("mti2015_05_17_sdem_precodificado.DBF"))
+
+Mti $ RAMA2 [mti $ RAMA == 1] <-1
+Mti $ RAMA2 [mti $ RAMA == 2 | mti $ RAMA == 3] <-2
+Mti $ RAMA2 [mti $ RAMA == 4 | mti $ RAMA == 5] <-3
+Mti $ RAMA2 [mti $ RAMA == 6 | mti $ RAMA == 7] <-4
+Tabla (mti $ rama2)
+Tabla (mti $ EDA)
+
+
+#EJERCICIO
+
+#recodificar la variable EDA en una nueva variable que se llame GPOEDA y etiquetarla 
+#esta recodificacion debe quedar en 4 lineas de scrip la ecodificacion es la sig 
+# 5,6,7 = 1 niños
+# 8,9,10,11 = 2 preadolecentes
+# 12,13,14 = 3 adolecentes
+# 15,16,17 = 4 joven 
+# Una vex q ha realizado el ejercicio ha generado una tabla con datos expandidos 
+# Y exportarlos a exel 
+
+Mti <-data.frame (read.dbf ("mti2015_05_17_sdem_precodificado.DBF"))
+
+#Recodificar el nombre de la variable (yo)
+
+Tabla (mti15 $ EDA)
+Mti $ EDA <-as.numeric (as.character (mti15 $ EDA)
+Clase (mti $ GPOEDA)
+Tabla (mti $ EDA)
+Mti $ GPOEDA <- factor (mti $ GPOEDA, niveles = c (1,2,3,4), etiquetas = c ("niños", "preadolecentes", "adolecentes", "joven"
+
+Mti $ GPOEDA [mti $ EDA == 1] <- 5 | mti $ GPOEDA [mti $ EDA == 1 <-6 | mti $ GPOEDA [mti $ EDA == 1 <-7
+Mti $ GPOEDA [mti $ EDA == 2] <- 8 | mti $ GPOEDA [mti $ EDA == 2] <- 9 | mti $ GPOEDA [mti $ EDA == 2] <- 10 | mti $ GPOEDA [mti $ EDA == 2 <-11
+Mti $ GPOEDA [mti $ EDA == 3] <- 12 | mti $ GPOEDA [mti $ EDA == 3] <- 13 | mti $ GPOEDA [mti $ EDA == 3] <- 14
+Mti $ GPOEDA [mti $ EDA == 4] <- 15 | mti $ GPOEDA [mti $ EDA == 4] <- 16 | mti $ GPOEDA [mti $ EDA == 4] <- 17
+
+#lo que el profijo q hicieramos por rangos 
+Mti $ GPOEDA [mti $ EDA> = 5 & mti $ EDA <= 7] <- 1 
+Mti $ GPOEDA [mti $ EDA> = 8 & mti $ EDA <= 11] <- 2
+Mti $ GPOEDA [mti $ EDA> = 12 & mti $ EDA <= 14] <- 3
+Mti $ GPOEDA [mti $ EDA> = 15 & mti $ EDA <= 17] <- 4
+
+Etiquétalo 
+Mti $ GPOEDA <- factor (mti $ GPOEDA, niveles = c (1,2,3,4), etiquetas = c ("niños", "preadolecentes", "adolecentes", "joven"
+Requerir
+T <-wtd.table (mti $ GPOEDA, weights = mti $ FAC_MTI)
+T
+Write.csv (t, file = "practica1.cvs")
+} 
