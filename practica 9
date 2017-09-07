@@ -1,0 +1,65 @@
+
+########ejercicio 
+x <- c(132,129,120,113.2,105,92,84,83.2,88.4,59,80,81.5,71,69.2)
+y <-c(46,48,51,52.1,54,52,59,58.7,61.6,64,61.4,54.6,58.8,58)
+length(x)
+length(y)
+## calcular la media
+mean(x)
+mean(y)
+
+## suma de x y y
+sum(x)
+sum(y)
+xx <- sum(x-mean(x))
+xx
+yy <- sum(y-mean(y))
+######################
+xx2 <- (x-median(x))^2
+xx2
+xx3 <- sum(xx2)
+xx3
+sumaxy <- sum(x*y)
+sumaxy
+###
+x3 <- sum(x^2)
+x3
+######calculos 
+Sxy <- sumaxy-(sum(x)*sum(y))/14
+Sxy
+Sxx <- x3-(sum(x)^2)/14
+Sxx
+
+####calculos de Bo y B1
+B1 <- Sxy/Sxx
+B1
+Bo <- mean(y)-(B1*mean(x))
+Bo
+### interpretacion
+##B1
+# nos dice que por cada peso que incremente el salario la produccion de camisas va a reducir
+## Bo
+## nos dice que la ecuacion 75.32124-0.2094x
+## va en forma descendente la recta esto quiere decir que si incrementa el salario reduce la produccion
+##ecuacion de y
+### ygorro <- 75.2124-.2094x
+
+## ejercicio
+x1<-115
+y1 <- Bo - B1*x1
+x2 <- 138
+
+y2 <- Bo - B1*x2
+x3 <-55
+
+y3 <- Bo - B1*x3
+x4 <- 99
+
+y4 <-Bo - B1*x4
+x5 <- 290
+
+y5 <-Bo - B1*x5
+x6 <-71
+
+y6 <-Bo - B1*x6
+y6 
