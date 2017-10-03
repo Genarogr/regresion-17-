@@ -1,0 +1,86 @@
+############# ejercicio clase
+# se busca la relacion de estatura (X) con longitud del salto (y)
+x<- c(170,172,173,174,174,175,176,177,180,180,180,180,180,181,181,182,182,182,182,184,184,185,186,186)
+y<-c(.84,1.31,1.42,1.03,1.07,1.08,1.04,1.8,1.45,1.60,1.61,2.13,2.15,.84,1.43,.90,1.81,1.94,2.68,1.49,2.52,3.00,1.87,3.08)
+length(x)
+length(y)
+## 1) determine la ecuacion de la recta de regresion estimada
+##2) calcule una estimacion opuntual del salto horizontal 
+#promedio cuando la estatura de la persona es de 182
+
+## 3) calcule los valores de los residuos de min cuadrado
+## de las 4 observaciones con los cuales la estatura es de 182
+## ¿ que porcion de la variacion observada en el salto horizontal es atribuida a la relacion de regresion lineal simple?
+## calcular la media
+mean(x)
+mean(y)
+
+## suma de x y y
+sum(x)
+sum(y)
+xx <- sum(x-mean(x))
+xx
+yy <- sum(y-mean(y))
+######################
+xx2 <- (x-mean(x))^2
+xx2
+xx3 <- sum(xx2)
+xx3
+sumaxy <- sum(x*y)
+sumaxy
+###
+x3 <- sum(x^2)
+x3
+######calculos 
+Sxy <- sumaxy-(sum(x)*sum(y))/24
+Sxy
+Sxx <- x3-(sum(x)^2)/24
+Sxx
+
+####calculos de Bo y B1
+B1 <- Sxy/Sxx
+B1
+Bo <- mean(y)-(B1*mean(x))
+Bo
+# y= -15.24606 + 0.09428597x
+
+
+## ahora hacer el calculo con la funcion lm
+mdo1 <- lm(y~x)
+## el resumen del modelo 
+summary(mdo1)
+### te da los mismos resultados de beta 0 y beta 1 
+# tambien te da una r cuadrada de 0.4248
+
+## para extraer valores de la funcion lm
+names(mdo1)
+mdo1$coefficients
+u <- mdo1$coefficients[1]
+u
+v <- mdo1$coefficients[-1]
+
+
+##### Hacer la estimacion puntual de 182
+##2)
+estim <- Bo+B1*(182)
+estim
+
+### 3) residuos de 182
+valor1 <- .90-estim
+valor1
+valor2 <- 1.81-estim
+valor2
+valor3 <- 1.94-estim
+valor3
+valor4 <- 2.68-estim
+valor4
+
+
+
+## 4)
+# la variacion observada es de 45% entonces es muy bajo el nivel de la recta te lo da la funcion lm
+
+
+## graficar
+plot(y~x,xlab="estatura",ylab = "salto horizontal",xlim=c(160,190),ylim=c(.80,3.2),main="Grafica diagrama de dispersion")
+abline(mdo1,col("pink"))
