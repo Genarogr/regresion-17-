@@ -1,0 +1,271 @@
+############################################# ejercico 1 ####################################################
+#ejercicio 16
+x<-c(5,12,14,17,23,30,40,47,55,67,72,81,96,112,127)
+y<-c(4,10,13,15,15,25,27,46,38,46,53,70,82,99,100)
+
+sxy<-sum(x*y)-sum(x)*sum(y)/length(x)
+sxx<-sum(x^2)-(sum(x)*sum(x))/length(x)
+b1<-sxy/sxx
+b0<-(sum(y)-b1*sum(x))/length(x)
+tab1<-lm(y~x)
+summary(tab1)
+
+
+##a)una grafica de dispersion de los datos apoya el uso del modelo de regresion linela simple?
+plot(y~x,xlab="volumenpre",ylab="volumenescu",xlim=c(2,127),ylim=c(2,120),main="Diagrama de dispersion")
+abline(tab1,col="red")
+
+#R: si, evidentemente los datos van muy pegados a la linea, podemos decir que es un buen modelo
+#b)calcule las estimaciones puntuales de la pendiente y la intercepcion de la recta de regresion de pobblacion
+
+#c)calcule una estimacion puntual de escurrimiento promedio cuando el volumen de precipitacion pluvial es de 50
+estimacion<-b0+b1*(50)
+
+#d)calcule una estimacion puntual de la desviacion estandar sigma
+ye<-b0+b1*(x)
+residuo<-y-ye
+sse<-sum(residuo*residuo)
+desv<-sse/length(x)-2
+#e)que proporcion de la variacion observada del volumen de escurrimiento puede
+#atribuirse puede atribuirse a la relacion de regresion entre escurrimiento y precipitacion
+# r= b1 el 82.69%
+
+############################################# ejercico 2 ####################################################
+
+#ejercicio 17
+#El agregado fino de concreto,hecho  partir de un agrgado secundario clasificado de manera uniforme y una pasta de cemento-agua 
+#,es beneficioso en las zonas propensas a las lluvias excesivas debido a ss excelentes propiedades de drenaje.el articulo "Thickness Design for No-fines Concrete Parking Lots"
+#(J. of Trans. Engr., 1995:476-448)empleo un analisis de minimos cuadrados en el estudio de como y "porosidad(%)se relciona
+#con x=unitario (por pie cubico)en muestras de concreto considere los siguientes datos representativos
+x<-c(99.0,101.1,102.7,103.0,105.4,107.0,108.7,110.8,112.1,112.4,113.6,113.8,115.1,115.4,120.0)
+y<-c(28.8,27.9,27.0,25.2,22.8,21.5,20.9,19.6,17.1,18.9,16.0,16.7,13.0,13.6,10.8)
+x2<-sum(x*x)
+xy<-sum(x*y)
+sx<-sum(x)
+sy<-sum(y)
+n<-15
+sxx<-x2-(sx*sx/n)
+sxy<-xy-(sx*sy/n)
+B1<-sxy/sxx
+sbx<-sum(B1*x)
+B0<-((sy-sbx)/n)
+
+md1<-lm(y~x)
+#a)obtenga la ecucion de la recta  de regresion estimada.
+#y=118.90991-.904730657(x)
+#A conntinuacion,cree un grafico de dispersion de los datosy el grafico de la recta estimada
+plot(y~x,xlab="peso unitario",ylab="porosidad",xlim=c(99,120),ylim=c(10,30),main="Grafica de dispersión")
+abline(md1,col("pink"))
+#¿sera que el modelo de la relacion puede explicar una gran parte de la variacion observada en y?
+#si porque los datos no son tan dispersos almenos en el intervalo de observacion
+#b)interprete la pendiente de la recta de minimos cuadrados
+#la recta tiene un relcion negtiva por cada que aument el peso unitario en una unidad
+#la porosidad den .90473 unidades
+#C¿que sucede si la estimacion lineal de utiliza para el peso unitario de 135 
+#la porosidad obtenida no seria la correcta ¿porque esto no es un buen idea?
+#porque el valor de 135 no esta en el rango de los datos de x por lo que este valor esta fuera del modelo 
+#d)calcule los residuos correspondientes a las dos primeras observaciones
+sp<-(B0+B1*(99.0))
+sp1<-(B0+B1*(101.1))
+res1<-(28.8-sp)
+res2<-27.9-sp1
+#e)calcule e interprete la estimacion puntual de sigma
+yg<-(B0+B1*(x))
+sse<-sum((y-yg)*(y-yg))
+s2<-sse/13
+#f)¿que proporcion de la variacion observada en la porosidad se puede atribuir
+#a la relacionlineal aproximada entre el pero unitario y la porosidad
+#es de 100.0004
+
+syy=sum((y*y))
+sst=syy-(((syy)*(syy))/15)
+r2=1-sse/sst  
+r2*100
+
+############################################# ejercico 3 ####################################################
+# Durante la utlima decada el polvo de caucho se ha utilizado
+# en cemento asfaltico para mejorar el rendimiento.
+# en el articulo Experimental Study of Recicled Rubber-Filled High-Strength Concrete
+# (magazine of concrete res 2009: 549-556)
+# incluye una regresion de y = esfuerzo axial(MPa) en x= esfuerzo cubico (Mpa) basada en lo sisg datos de muestra
+
+x <- c(112.3,97.0,92.7,86.0,102.0,99.2,95.8,103.5,89.0,86.7)
+y <- c(75.0,71.0,57.7,48.7,74.3,73.3,68.0,59.3,57.8,48.5)
+
+# a) obtenga la ecuacio de la recta de minimos cuadrados e interprete su pendiente
+
+sxy <- (sum(x*y))-(sum(x)*sum(y)/length(x))
+sxx <- (sum(x*x))-(sum(x)*sum(x)/length(x))
+b1 <- sxy/sxx
+b0 <- (sum(y)-b1*sum(x))/length(x)
+
+# y = bo + b1(x) => y = -31.8036 + 0.986970(x) 
+# la recta tiene una ralacion postiva, el incremento en una unidad de esfuerzo cubico hace que incremente el ezfuerzo axial en .98 unidades
+
+mdo1 <- lm(y~x)
+summary(mdo1)
+plot(y~x, xlab="esfuerzo cubico", ylab = "esuferzo axial" , xlim=c(80,120), ylim=c(45,80), main= "grafica de dispercion")
+abline(mdo1,col=("red"))
+
+# b) calcule e interprete el coeficiente de determinacion r^2
+sse <- sum(y-(b0 + b1*x))^2 
+ym <- sum(y) / length(y)
+sst <- sum(y^2)-(((sum(y))^2)/length(y))
+r2 <- 1-(sse/sst) 
+r2
+# el 100% de la variacion observada en el esfuerzo axial es atribuible al modelo de regrecion linel que se ralciona el esfuerzo axial y el esfuerzo cubico
+
+# c) calcule e interprete una estimacion de la desviacion estandar del error en el modelo de regresion lineal
+s2 <- sse/(length(y)-2)
+
+############################################# ejercico 4 ####################################################
+# ejercicio 4
+## x = tasa de liberacion debido a area de quemador
+### y = tasa de emision de NOx(ppm)
+
+x <- c(100,125,125,150,150,200,200,250,250,300,300,350,400,400)
+y <- c(150,140,180,210,190,320,280,400,430,440,390,600,610,670)
+length(y)
+## calcular la media
+mean(x)
+mean(y)
+
+## suma de x y y
+sum(x)
+sum(y)
+xx <- sum(x-mean(x))
+xx
+yy <- sum(y-mean(y))
+######################
+xx2 <- (x-mean(x))^2
+xx2
+xx3 <- sum(xx2)
+xx3
+sumaxy <- sum(x*y)
+sumaxy
+###
+x3 <- sum(x^2)
+x3
+######calculos 
+Sxy <- sumaxy-(sum(x)*sum(y))/length(x)
+Sxy
+Sxx <- x3-(sum(x)^2)/length(x)
+Sxx
+
+####calculos de Bo y B1
+B1 <- Sxy/Sxx
+B1
+Bo <- mean(y)-(B1*mean(x))
+Bo
+####  a)La ecuacion de la recta de regresion es -45.55191+ 1.711432x
+## B)¿ Cual es la estimacion de la tasa de emision de NOx esperada cuando la tasa de liberacion debido al area del quemador
+## es igual a =225
+estimacion <- Bo + B1*(225)
+estimacion
+## la estimacion es de 339.5204
+## checar la ecuacion con el metodo lm
+## ahora hacer el calculo con la funcion lm
+metdo1 <- lm(y~x)
+## el resumen del modelo 
+summary(metdo1)
+### te da los mismos resultados de beta 0 y beta 1 
+# tambien te da una r cuadrada de 0.9609
+
+## para extraer valores de la funcion lm
+names(metdo1)
+metdo1$coefficients
+u <- metdo1$coefficients[1]
+u
+v <- metdo1$coefficients[-1]
+v
+
+
+##c) estime la cantidad en la cual espera que  cambie la tasa de emisiones de NO, cuando la tasa de liberacion debida al area del quemador 
+## disminuye  en 50
+estima <- estimacion-50
+estima
+## la cantidad seria 289.5204  si la cantidad estimada en 225 reduciera en un 50
+
+## utilizaria la recta de regresion estimada para predecir la tasa de emision con una tasa de liberacion de 500
+##¿Si o no? si  ¿porque? en la r cuadrada nos indica que este modelo tine el 96.09% de ser eficaz entonces por eso utilizaria este modelo
+
+############################################# ejercico 5 ####################################################
+## x= area superficial de la roca
+## y = densidad de la colonia 
+x <- c(50,71,55,50,33,58,79,26,69,44,37,70,20,45,49)
+y <- c(152,1929,48,22,2,5,35,7,269,38,171,13,43,185,25)
+length(y)
+length(x)
+## calcular la media
+mean(x)
+mean(y)
+
+## suma de x y y
+sum(x)
+sum(y)
+xx <- sum(x-mean(x))
+xx
+yy <- sum(y-mean(y))
+######################
+xx2 <- (x-mean(x))^2
+xx2
+xx3 <- sum(xx2)
+xx3
+sumaxy <- sum(x*y)
+sumaxy
+###
+x3 <- sum(x^2)
+x3
+######calculos 
+Sxy <- sumaxy-(sum(x)*sum(y))/length(x)
+Sxy
+Sxx <- x3-(sum(x)^2)/length(x)
+Sxx
+
+####calculos de Bo y B1
+B1 <- Sxy/Sxx
+B1
+Bo <- mean(y)-(B1*mean(x))
+Bo
+####  a)La ecuacion de la recta de regresion es -305.8813+ 9.963254x
+## checar la ecuacion con el metodo lm
+## ahora hacer el calculo con la funcion lm
+metdo1 <- lm(y~x)
+## el resumen del modelo 
+summary(metdo1)
+### te da los mismos resultados de beta 0 y beta 1 
+# tambien te da una r cuadrada de 0.1237
+
+## para extraer valores de la funcion lm
+names(metdo1)
+metdo1$coefficients
+u <- metdo1$coefficients[1]
+u
+v <- metdo1$coefficients[-1]
+v
+#a) area superficial = 70,71
+are<- Bo+B1*70
+are
+## cuando el area superficial es 70 la densidad es de 391.5464
+area<- Bo+B1*71
+area
+## cuando el area superficial es 71 la densidad es de 401.5097
+## calcular los residuos
+
+SSE <- sum(y-(Bo+ B1*x))^2
+SSE
+### la suma de residuos es de 9.774302e-26
+sigma<- SSE/(length(x)-2)
+sigma
+#con sigma de 7.518694e-27
+
+## b) coeficiente de determinacion (r cuadrada)
+## como ya nos habia dado la funcion lm la r cuadrada la interpretamos 
+# que una r cuadradaa= 12.37% es muy baja por lo tanto no consideramos de utilidad el modelo 
+coef <- sum(y^2)-sum(y)^2/length(y)
+coef
+determinacion <- 1-SSE/coef
+determinacion
+
+
+
