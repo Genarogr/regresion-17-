@@ -1,0 +1,69 @@
+############## ejercicio ####
+# plantear un MRM de minimo 4 variables independientes
+# a este modelo que planteen van a realizar lo siguiente:
+# 1) Analizar la anova para conocer la bondad de ajuste
+# 2) a traves de los coeficientes detectar las variables independientes no significativas
+# 3) analizar la r^2 para conocer la variabilidad del modelo
+### 4) En dado caso de que haya alguna var independiente no significativa eliminarla y diagnosticar
+# el modelo a traves de las pruebas para los supuestos 
+
+#### el precio de comoputadoras va relacionado con otras variables como 
+# calidad de computarora  con laa memoria ram y el procesador
+calidad <- c(60,50,45,28,68,69,85,50,89,95)
+precios <- c(10400,6250,5550,9680,12000,8690,5605,9898,13698,20500)
+Ram <- c(36,25,22,28,42,26,21,30,45,50)
+Procesador <- c(8,9,6,5,8,9,5,6,9,10)
+###################### 1)
+modelo <- lm(precios~calidad+ Ram + Procesador)
+cal <- data.frame(precios,calidad,Ram,Procesador)
+summary(modelo)
+anova(modelo)
+#### en este caso el estadistico F que no es significativo en el modelo es el de la variable procesador 
+# ya que tiene un estadistico F menor que 1 y un p-value mayor a  .05
+##############################
+coefficients(modelo)
+#### la variable no significativa en el modelo es el procesador
+## en este caso la r ajustada es de .8138 nos indica un buen modelo pero una variable no es significativa
+
+modelo2 <- lm(precios~calidad+ Ram )
+cal2 <- data.frame(precios,calidad,Ram)
+summary(modelo2)
+## hacer los supuestos
+
+cal2$fitted.modelo2 <- fitted(modelo2)
+cal2$residual.modelo2 <- residuals(modelo2)
+cal2$rstudent.modelo2 <- rstudent(modelo2)
+
+
+# Diagnostico de los supuestos
+# supuesto 1 Normalidad
+## para el supuesto de normalidad se aplica la prueba de shapiro
+# en r la funcion que aplica esta prueba de shapiro.test
+shapiro.test(cal2$rstudent.modelo2)
+## cumple con media cero y sigma cuadrada
+## este es caso contrario que la anova
+# el resultado que esperamos debe ser mayor a .05
+## EN esta prueba esperamos un p-value mayor a .05 y en este caso
+# obtiene un p-value mayor a .05 por lo que podriamos decir que se 
+# acepta el supuesto de normalidad
+# ademas de shapiro test se debe observar graficamente esta prueba a traves de las funciones siguientes
+
+qqnorm(cal2$rstudent.modelo2)
+qqline(cal2$rstudent.modelo2)
+
+## Para homogeneidad de las varianzas se utiliza
+install.packages("lmtest")
+require(lmtest)
+bptest(modelo2)
+## si hay homogeneidad entre las varianzas
+
+### supuesto de independencia o autocorrelacion
+# en este caso se aplica la prueba durbin watson,  como lo vimos la clase anterior
+# esta prueba se evalua de dos formas; por un lado el valor de durbin watson tiene que estar 
+# Entre 1.5 y 2.5
+# Ademas de este valor hay que observar el p-value que tiene que ser mayor a .05
+# para que cumpla con el supuesto de independencia de los residuos
+
+dwtest(modelo2,alternative = "two.sided")
+
+### cumple los 3 supuestos por lo tanto es un buen modelo
