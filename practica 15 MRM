@@ -1,0 +1,179 @@
+##Secuencia
+
+require(stats)
+
+base <- data.frame(swiss)
+# Analisis exploratorio ## del video explicar las bases y hacer el analisis exploratorio 
+View(base)
+
+names(base)
+##
+pairs(base)
+## pairs grafica las variables como por pares 
+cor(base)
+## cor dice la intencidad entre las variables entre mas cercano a 1 mejor
+# solo es una propuesta
+## Propuesta modelo de regresion multiple con base en el analisis exploratorio
+regresion1 <- lm(Infant.Mortality~Fertility,data = base)
+# (dependiente ~ independiente)
+
+### con el modelo de ayer nos basamos
+## modelo propuesto anteriormente
+nulo <- lm(Fertility~ 1, data = base)
+### modelo nulo con una constante en este caso es 1 
+## el nulo nos permitira saber cual es mejor modelo
+## es como una referencia 
+# si sale perfecto el modelo nulo quiere decir que no tiene relacion las variables independientes de dependiente
+
+## se quiere comparar el modelo nulo contra el completo 
+nulo
+summary(nulo)
+completo <- lm(Fertility~ ., data = base)
+## con el punto quiere decir que tenemos todas las variables independientes abrevia todos los campos 
+### mete las 5 variables independientes
+## es como si estuviera (fertility ~ mortality+ catholic ´+ education + agriculture+ examination)
+step(nulo,scope = list(lower= nulo,upper=completo),direction = "forward")
+## step calcula los AIC 
+## criterios de informacion que nos dice que modelo es el mejor , entre menos variables tenga mejor modelo 
+## el primer argumento que ingresamos es el nulo
+
+## scope calcula primero el modelo nulo hasta el completo
+# etep  calcula es decir calcula el nulo con la primer varible del completo . Hasta llegar al completo
+## de uno en uno va calculando el AIC y se toma el menor
+
+## con metodologia forward la direccion va hacia delante
+## primer resultado de AIC
+## si el AIC nos da alto y en la tabla nos da uno menor significa que le debes de sumar para que te de un AIC menor
+## ejemplo : (fertility ~ mortality+ catholic)
+## y asi sucesivamente hasta tener el mejor modelo
+
+summary(completo)
+
+help("step")
+#### el mejor AIC es de 189.86 
+## donde el el step  calcula la suma todas las variables sin Examination
+## el mejor modelo es Fertility ~ Education+ Catholic+ Infant.Mortality +Agriculture
+
+## eligo el mejor modelo que obtengo del AIC
+mod4 <-lm(formula = Fertility ~ Education + Catholic + Infant.Mortality + Agriculture, data = base)
+summary(mod4)
+### se analiza r ajustada para saber que tan bueno es nuestro modelo
+## en este caso es de 67.07%
+## con la finalidad de observar aspectos basicos como la r cuadrada ajustada
+# que nos permite conocer la variabilidad explicada del modelo 
+# los errores de residuos al standar 7.168 
+## lo que queremos ver con el estadistico F es que la variables esten aportando a nuestro modelo 
+## si es menor a .05 es significatia 
+#la significancia de las variables  el estadistico F y el p-value para ver el ajuste del modelo 
+# la prueba de  hipotesis que se aplica en el estadistico F es
+## Ho : B0, B1, B2, ... , Bk=0
+## hip nula los errores se dstribuyen normalmente
+## Ha: al menos un Bj diferente de cero
+## no se distribuyen normalmente
+# aqui esperamos rechazar la hipoteis nula, por lo que el valor de p-value debe ser < 0.05 
+## y ademas el estadistico F debe ser mayor a 1
+## Al parecer tenemos un buen modelo segun eestos indicadores
+
+
+####################################################################
+# pasos para el summary
+###   1  #  r^2 ajustada  explica la variabilidad del modelo (aprox >60%)
+###  2 # erro estandar debe ser cercano a 0
+## 3   # significancia de las varianzas 
+## indepndiente   = p -value < 0.05 del estadistico t
+### 4 ## estadistico F > 1 ,, p-valae <.05
+##############################################################
+
+## Pruebas de MRM
+shapiro.test(rstudent(mod4)) ### prueba shapiro para normalidad
+### aqui esperamos no rechazar la hip nula por lo que el valor de p-value debe ser mayor a .05
+## en este caso nuesta p-value es de .4812 por lo que podemos mencionar que no rechazamos la hip nulo,
+## es decir los errores se distribuyen normalmente
+
+
+## para que corra el bptest se carga la libreria
+require(lmtest)
+bptest(mod4)   ### prueba breusch pagan que permite ver autocorrelacion
+## aqui esperamos no rechazar la hip.nula es decir un p-value  mayor a .05
+## este modelo nos permite saber que no hay mas de dos variables que aporten lo mismo al modelo
+## en este caso nos da un p-value de .5309, por lo que no rechazamos la hip.nula
+### este modelo cumple el spuesto de autocorrelacion
+## no hay mas de dos variables que aporten lo mismo al modelo
+
+
+
+
+
+########################################################
+# Prueba Durbin Watson (independencia)
+## p-value > .05 o un valor de DW entre 1.5 y 2.5 
+####################################################
+
+## hip.nula : los errores son independites
+#ha ; los errores son dependientes
+
+
+dwtest(mod4, alternative = "two.sided") 
+## prueba de independencia 
+### la prueba de independencia la pasa apenas 
+## siendo flexibles en el resultado
+summary(mod4)
+
+#########################################################################
+
+# la prueba t para H0 : r^2  Agri =0 frente a 
+## Ha : r^2  Agril ¡=0 
+## interpretacion de coeficientes
+# el modelo elegido estima que hay una disminucion de 0.15 en la tasa de fecundida por cada aumento de 1% de hombres
+# involucrados en la agricultura manteniendo constantes
+### Las variables restantes
+# Agriculture ..... -0.1546 ............. coeficientes
+## El modelo elegido estima que hay una disminucion de .98
+## En la tasa de fecundidad por cada aumento de 1% de la educacion manteniendo como contantes las variables restantes
+### Educacion ... -0.9802 ......coeficientes
+## El modelo elegido estima que hay un incremento de 0.12
+## en la tasa de fecundidad por cada aumento de 1% de pob.catolica manteniendo como contantes las demas variables
+## catholic....... 0.12 .......... coeficientes 
+### el modelo elegido estima que hay un incremento de 1.07 en la tasa de fecundidad por cada aumento de 1% de mortalidad
+# infantil manteniendo constantes las demas variables
+# infant.mortality ..... 1.07 ........coeficientes
+
+###############################################################
+## ejercicio 
+## variable dependiente drivers
+base4 <- data.frame(Seatbelts)
+View(base4)
+nulo <- lm(drivers~ 1, data = base4)
+
+completo <- lm(drivers~ ., data = base4)
+
+
+step(nulo,scope = list(lower= nulo,upper=completo),direction = "forward")
+
+##3 el mejor modelo es drivers ~ DriversKilled + front + rear + law + VanKilled
+
+
+
+mod5 <-lm(formula = drivers ~ DriversKilled + front + rear + law + VanKilled,  data = base4)
+summary(mod5)
+
+
+
+shapiro.test(rstudent(mod5))
+
+bptest(mod5)
+#### no pasa esta prueba 
+
+
+summary(mod5)
+
+
+mod6 <-lm(formula = drivers ~ DriversKilled + front + rear + law ,  data = base4)
+
+shapiro.test(rstudent(mod6))
+### pasa la de normalidad
+
+bptest(mod6)
+## no pasa no ay autocorrelacion
+### en este caso como no pasa la segunda prueba debemos de checar el correlacion del modelo modificando la base o 
+# replanteando el problema
