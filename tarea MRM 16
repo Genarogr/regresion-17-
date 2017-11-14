@@ -1,0 +1,32 @@
+base9 <-read.delim("clipboard")
+base9
+View(base9)
+nulo9 <- lm(Prom.Emi.Co2~ 1, data = base9)
+
+completo9 <- lm(Prom.Emi.Co2~ ., data = base9)
+
+
+step(nulo9,scope = list(lower= nulo9,upper=completo9),direction = "forward")
+
+### lo siguiente es el mejor modelo de AIC que presentan
+
+
+#############33
+# hacer las 3 pruebas 
+mod9 <-lm(formula = Prom.Emi.Co2 ~  Creci.anual+ Cons.combustible.liquido+   Com.gaseoso + Comb.solidos + Uso.Petroleo+metano  , data = base9)
+summary(mod9)
+coefficients(mod9)
+
+
+shapiro.test(rstudent(mod9))
+### no pasa la prueba de normalidad 
+# los datos no estan distribuidos normalmente
+require(lmtest)
+bptest(mod9)
+
+
+
+dwtest(mod9, alternative = "two.sided") 
+## prueba de independencia 
+### la prueba de independencia no la pasa
+summary(mod9
