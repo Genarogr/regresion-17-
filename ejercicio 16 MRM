@@ -1,0 +1,225 @@
+######
+### Ejercicio
+# calcular un MRM de una base del banco mundial
+# VaR DEP ------------ Esperanza de vida
+# INDEP ---------- Tasa de fecundidad
+##             %  tasa de mortalidad infantil (menres a 5 años)
+#                 % porccentaje de poblacion urbana
+##            niñas economicamente activas
+##              niños economicamente activos
+##            tasa de crecimiento anual PIB
+#####      De los paises de México, Argentina y Brasil
+#### 3 modelos 1 para cada pais
+
+install.packages("readxl")
+library(readxl)
+require(readxl)
+baseM <- read_excel("C:/Users/genar/Desktop/Programa R/Banco_mundialM.xlsx")
+View(baseM[-1])
+
+baseMe <- data.frame(na.omit(baseM)[-1])
+
+View(baseMe)
+names(baseMe)
+nulo <- lm(Esperanza_de_vida~ 1, data = baseMe )
+completo <- lm(Esperanza_de_vida~ ., data = baseMe)
+
+
+step(nulo,scope = list(lower= nulo,upper=completo),direction = "forward")
+summary(baseMe)
+### el mejor modelo es lm(formula = Esperanza_de_vida ~ Tasa_de_fertilidad, data = baseMex)
+
+
+modM <-lm(formula = Esperanza_de_vida ~ Tasa_de_fertilidad +  Niñas_económicamente_activos+ 
+            Niños_económicamente_activos. + Tasa_de_mortalidad_menores + 
+            Población_urbana+Crecimiento_del_PIB,  data = baseMe)
+shapiro.test(rstudent(modM))
+require(lmtest)
+bptest(modM)
+### debido a los pocos datos R no lee los pocos caracteres debido a que falta informacion 
+## ya que los espacios vacios fueron eliminados y eso dejo con pocos datos a la base
+dwtest(modM, alternative = "two.sided") 
+
+############################
+baseA <- read_excel("C:/Users/genar/Desktop/Programa R/Banco_A.xlsx")
+View(baseA[-1])
+
+baseAr <- data.frame(na.omit(baseA)[-1])
+
+View(baseAr)
+names(baseAr)
+nuloA <- lm(Esperanza.de.vida.al.nacer.total..años.Argentina~ 1, data = baseAr )
+completoA <- lm(Esperanza.de.vida.al.nacer.total..años.Argentina~ ., data = baseAr)
+
+
+step(nuloA,scope = list(lower= nuloA,upper=completoA),direction = "forward")
+summary(baseAr)
+modA <-lm(formula = Esperanza.de.vida.al.nacer.total..años.Argentina ~ Tasa.de.fertilidad.total..nacimientos.por.cada.mujer.Argentina 
+          +  Tasa.de.mortalidad.menores.de.5.años..por.cada.1.000.Argentina
+          +  Población.urbana....del.total..Argentina+Crecimiento.del.PIB....anual.Argentina,  data = baseAr)
+shapiro.test(rstudent(modA))
+### debido a los pocos datos R no lee los pocos caracteres debido a que falta informacion 
+## ya que los espacios vacios fueron eliminados y eso dejo con pocos datos a la base
+bptest(modA)
+####
+dwtest(modA, alternative = "two.sided")
+###############################################################
+baseB <- read_excel("C:/Users/genar/Desktop/Programa R/Banco_B.xlsx")
+View(baseB)
+
+baseBr <- data.frame(na.omit(baseB))
+
+View(baseBr)
+names(baseBr)
+nuloB <- lm(Esperanza.de.vida.al.nacer.total..años.Brasil~ 1, data = baseBr )
+completoB <- lm(Esperanza.de.vida.al.nacer.total..años.Brasil~ ., data = baseBr)
+
+
+step(nuloB,scope = list(lower= nuloB,upper=completoB),direction = "forward")
+
+
+modB <-lm(formula = Esperanza.de.vida.al.nacer.total..años.Brasil ~ Tasa.de.fertilidad.total..nacimientos.por.cada.mujer.Brasil
+          +  Tasa.de.mortalidad.menores.de.5.años..por.cada.1.000.Brasil+ 
+            Niños.económicamente.activos.que.sólo.trabajan.mujeres....para.cada.edad.de.niñas.entre.los.7.y.14.años.Brasil
+          + Niños.económicamente.activos.que.sólo.trabajan.varones....para.cada.edad.de.niños.entre.los.7.y.14.años.Brasil
+          +  Población.urbana....del.total.Brasil+Crecimiento.del.PIB....anual.Brasil,  data = baseBr)
+shapiro.test(rstudent(modA))
+### debido a los pocos datos R no lee los pocos caracteres debido a que falta informacion 
+## ya que los espacios vacios fueron eliminados y eso dejo con pocos datos a la base
+bptest(modA)
+
+dwtest(modA, alternative = "two.sided")
+####################################################################
+## en los 3 modelos debido a la falta de datos de los niños(as) economicamente activos no se puede ver bien el modelo
+# en los 3 paises influyen estas dos variables
+
+
+
+##############################################################
+### ahora haremos un modelo sin estas variables para ver cuales son las variables que afectan
+## Para MExico
+base9 <-read.delim("clipboard")
+base9
+View(base9)
+baseM9 <- data.frame(base9[-1])
+nulo9 <- lm(Esperanza_de_vida~ 1, data = baseM9)
+
+completo9 <- lm(Esperanza_de_vida~ ., data = baseM9)
+
+
+step(nulo9,scope = list(lower= nulo9,upper=completo9),direction = "forward")
+
+### lo siguiente es el mejor modelo de AIC que presentan
+
+
+#############33
+# hacer las 3 pruebas 
+mod9 <-lm(formula = Esperanza_de_vida ~ Tasa_de_fertilidad + Tasa_de_mortalidad_menores + 
+            Población_urbana + Crecimiento_del_PIB, data = baseM9)
+summary(mod9)
+coefficients(mod9)
+
+
+shapiro.test(rstudent(mod9))
+### Pasa la prueba de normalidad la pasa
+require(lmtest)
+bptest(mod9)
+### pasa la segunda pruba
+
+
+dwtest(mod9, alternative = "two.sided") 
+## prueba de independencia 
+### la prueba de independencia la pasa
+summary(mod9)
+### en este caso para Mexico el datos menos significativo es la poblacion urbana 
+## y pasa todas las pruebas 
+
+
+#################################################################
+## para argentina
+baseA <-read.delim("clipboard")
+baseA
+View(baseA)
+baseA9 <- data.frame(baseA[-1])
+nuloA9 <- lm(Esperanza.de.vida.al.nacer.total..años.Argentina~ 1, data = baseA9)
+
+completoA9 <- lm(Esperanza.de.vida.al.nacer.total..años.Argentina~ ., data = baseA9)
+
+
+step(nuloA9,scope = list(lower= nuloA9,upper=completoA9),direction = "forward")
+
+### lo siguiente es el mejor modelo de AIC que presentanEsperanza.de.vida.al.nacer.total..años.Argentina ~ Población.urbana....del.total..Argentina + 
+#Tasa.de.mortalidad.menores.de.5.años..por.cada.1.000.Argentina
+
+
+#############33
+# hacer las 3 pruebas 
+modA9 <-lm(formula = Esperanza.de.vida.al.nacer.total..años.Argentina ~ 
+             Población.urbana....del.total..Argentina + Tasa.de.mortalidad.menores.de.5.años..por.cada.1.000.Argentina, 
+           data = baseA9)
+summary(modA9)
+coefficients(modA9)
+
+
+shapiro.test(rstudent(modA9))
+### NO Pasa la prueba de normalidad los datos no estan distribuidos normalment
+require(lmtest)
+bptest(modA9)
+### pasa la segunda pruba
+
+
+dwtest(mod9, alternative = "two.sided") 
+## prueba de independencia 
+### la prueba de independencia no la pasa
+summary(modA9)
+### en este caso para Argentina el datos mas significativos son la poblacion urbana y la tasa de mortalidad en la 
+# esperanza de vida
+
+
+
+
+
+#################################################################
+## para Brasil
+baseB <-read.delim("clipboard")
+baseB
+View(baseB)
+baseB9 <- data.frame(baseB[-1])
+nuloB9 <- lm(Esperanza.de.vida.al.nacer.total..años.Brasil~ 1, data = baseB9)
+
+completoB9 <- lm(Esperanza.de.vida.al.nacer.total..años.Brasil~ ., data = baseB9)
+
+
+step(nuloB9,scope = list(lower= nuloB9,upper=completoB9),direction = "forward")
+
+### lo siguiente es el mejor modelo de AIC que presentan   Esperanza.de.vida.al.nacer.total..años.Brasil ~ Tasa.de.mortalidad.menores.de.5.años..por.cada.1.000.Brasil + 
+##Crecimiento.del.PIB....anual.Brasil
+
+
+#############33
+# hacer las 3 pruebas 
+modB9 <-lm(formula = Esperanza.de.vida.al.nacer.total..años.Brasil ~ 
+             Tasa.de.mortalidad.menores.de.5.años..por.cada.1.000.Brasil + 
+             Crecimiento.del.PIB....anual.Brasil, data = baseB9)
+summary(modB9)
+coefficients(modB9)
+
+
+shapiro.test(rstudent(modB9))
+### Pasa la prueba de normalidad los datos  estan distribuidos normalment
+require(lmtest)
+bptest(modB9)
+### pasa la segunda pruba
+
+
+dwtest(mod9, alternative = "two.sided") 
+## prueba de independencia 
+### la prueba de independencia no la pasa
+summary(modA9)
+### en este caso para Brasil al igual que argentina los datos mas significativos son la poblacion urbana y la tasa de mortalidad en la 
+# esperanza de vida 
+
+##########################################################################
+## en los tres casos los datos que tienen mayor significancia son los de mortalidad y fertilidad
+### la poblacion urbana no tiene tanta significancia 
+## en mexico fue el unico lugar donde pasaron las 3 pruebas
