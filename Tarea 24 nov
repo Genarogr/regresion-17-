@@ -1,0 +1,114 @@
+####################################################################################################
+# ejercicio 
+# analisis de entregas de productos 
+# Se utiliza tiempo de var dep para decirle a los clientes 
+# cuanto va tardar en llegar el producto 
+# saben que las var que impactan en el tiempo de entrega son la distancia y el # de cajas
+n.cajas <- c(10,15,10,20,25,18,12,14,16,22,24,17,13,30,24)
+Distancia <- c(30,25,40,18,22,31,26,34,29,37,20,25,27,23,33)
+tiempo <- c(24,27,29,31,25,33,26,28,31,39,33,30,25,42,40)
+length(n.cajas)
+length(Distancia)
+length(tiempo)
+
+################ tiempo variable dependiente
+Estudio5 <- data.frame(n.cajas,Distancia,tiempo)
+pairs(Estudio5)
+cor(Estudio5)
+
+regnull5 <- lm(tiempo~ 1,data = Estudio5)
+
+allreg5 <- lm(tiempo~ ., data = Estudio5)
+
+step(regnull5, scope = list(lower=regnull5, upper=allreg5), direction="forward")
+######################
+## ecuacion del modelo 
+## 
+coefficients(mod25)
+#  y=.8777+..4559
+################
+## interpretar el modelo 
+# en este modelo podriamos decir que por cada unidad que aumenta el 
+##
+##
+
+####################3 
+## mejor modelo lm(formula = tiempo ~ n.cajas + Distancia, data = Estudio5)
+mod25 <- lm(formula = tiempo ~ n.cajas + Distancia, data = Estudio5)
+
+summary(mod25)
+## modelo aceptables
+shapiro.test(rstudent(mod25))
+###
+## no existe normalidad en los residuos con el p- value < .05
+require(lmtest)
+bptest(mod25)
+### tenemos un p- value mayor a .05 
+# homostacidad
+
+dwtest(mod25, alternative = "two.sided") 
+######## cumple con el modelo de independencia 
+
+#########  no pasa normalidad por lo que hay que revisar 
+## tenemos que ver los renglones para ver que es el error
+install.packages("car")
+require(car)
+outlierTest(allreg5,cutoff=.05,n.max= 5, order=T)
+influencePlot(allreg5,id.n = 5)
+
+##  la observacion 5 indican con problemas
+# ahora para condirmar los casos que tienen implicaciones
+# con el modelo se aplica el grafico de distancias coo
+cmod2 <- cooks.distance(allreg5)
+cmod2
+## el valor 5 en realidad es .8032
+### etiqu <- rownames(eier)
+install.packages("farway")
+require(farway)
+### nos dara una grafica
+halfnorm (cmod2,labs :etique, ylab="dist.cook")
+## aqui esperamos un dato mayor a 1 para comprobar que si es atipico
+# el nimero mas alto es el 5 por lo que ahora una solucion es eleminarlo 
+# volver a aplicar el shapiro test 
+### tarea quitar la observacion 5 y volver a hacer la prueba 
+
+estudi <- data.frame(Estudio5[-5,])
+View(Estudio5)
+View(estudi)
+
+
+regnull9 <- lm(tiempo~ 1,data = estudi)
+
+allreg9 <- lm(tiempo~ ., data = estudi)
+
+step(regnull9, scope = list(lower=regnull9, upper=allreg9), direction="forward")
+######################
+## ecuacion del modelo 
+## 
+coefficients(mod9)
+#  y=1.003 + .3804
+##
+
+##
+##
+
+####################3 
+## mejor modelo lm(formula = tiempo ~ n.cajas + Distancia, data = Estudio5)
+mod9 <- lm(formula = tiempo ~ n.cajas + Distancia, data = estudi)
+
+summary(mod9)
+## modelo aceptables
+shapiro.test(rstudent(mod9))
+###
+## existe normalidad en los residuos con el p- value > .05
+# p-value es de .19
+require(lmtest)
+bptest(mod9)
+### tenemos un p- value mayor a .05 
+# homostacidad
+
+dwtest(mod25, alternative = "two.sided") 
+
+#######33 eliminando el dato 5 que es el que afecta nuestro modelo tenemos un resultado positivo
+### pasa todas las pruebas
+
